@@ -103,3 +103,69 @@ def reg_bits(regi):
     binary =("0"*zeroes)+binary #add the required number of zeroes in the starting of the binary
 
     return binary
+
+#To identiy labels in input
+def label_identify(lines):
+    labels={}
+    pc=0
+
+    for l in lines:
+        l=l.strip()
+        if l=="":
+            continue
+        if ":" in l:
+            parts=l.split()
+            lbl=parts[0]
+
+            labels[lbl]=pc
+        pc+=4
+    return labels
+
+#To Parse instructions
+def parse_lines(l):
+    l=l.strip()
+    if ":" in l:
+        parts=l.split(":")
+        l=parts[1]
+        l=l.strip()
+    l=l.replace(","," ")
+    tkns=l.split()
+    return tkns
+
+def encode_instruction(instruct,operands):
+
+    #R-type
+    #func7[31:25]|rs2[24:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
+
+    if instruct in R_type: #checks whether instruction belongs to r-type dictionary
+        rd=operands[0]
+        rs1=operands[1]
+        rs2=operands[2]
+        encoding= R_type[instruct] #get opcode, func3, func7 for this instruction
+        return(
+            encoding["func7"] #add func7 bits
+            +reg_bits(rs2)
+            +reg_bits(rs1)
+            +encoding["func3"] #add func3 bits
+            +reg_bits(rd)
+            +encoding["opcode"] #add opcode bits
+        )
+     #I-type 
+     #imm[31:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
+
+    elif instruct in I_type: #checks whether instruction belongs to I-type dictionary 
+        rd=operands[0] #destination register
+        rs1=operands[1] #source 1 register
+        imm=int(operands[2]) #source 2 register
+
+        encoding=I_type[instruct]
+        imm_bin= conv_to_bin(imm,12) #immediate converted into 12-bits binary
+        if imm_bin is None:
+            return "INVALID"
+        return (
+            imm_bin 
+            +reg_bits(rs1)
+            +encoding["func3"]
+            +reg_bits(rd)
+            +encoding["opcode"]
+        )
