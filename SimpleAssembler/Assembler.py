@@ -103,3 +103,5 @@ def reg_bits(regi):
     binary =("0"*zeroes)+binary #add the required number of zeroes in the starting of the binary
 
     return binary
+
+#this is to check github
