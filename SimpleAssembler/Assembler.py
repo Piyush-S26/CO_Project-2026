@@ -105,3 +105,4 @@ def reg_bits(regi):
     return binary
 
 #this is to check github
+#github check 2
