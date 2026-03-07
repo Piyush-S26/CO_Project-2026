@@ -169,3 +169,20 @@ def encode_instruction(instruct,operands):
             +reg_bits(rd)
             +encoding["opcode"]
         )
+    
+    #S-type
+    #imm[31:25]|rs2[24:20]|rs1[19:15]|funct3[14:12]|imm[11:7]|opcode[6:0]
+
+    elif instruct in S_type: #checks whether instruction belongs to S-type dictionary
+        rs2=operands[0] #Value register
+        imm=int(operands[1]) #Immediate offset
+        rs1=operands[2]
+        
+        encoding=S_type[instruct] #This fetches opcode and func3
+        imm_bin=conv_to_bin(imm,12) #Convert immediate to 12-bit binary number
+        if imm_bin is None:
+            return "INVALID"
+        imm_high=imm_bin[:7] #imm[11:5]
+        imm_low=imm_bin[7:] #imm[4:0]
+
+        return(imm_high+reg_bits(rs2)+reg_bits(rs1)+encoding["func3"]+imm_low+encoding["opcode"])
