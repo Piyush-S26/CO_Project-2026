@@ -169,3 +169,23 @@ def encode_instruction(instruct,operands):
             +reg_bits(rd)
             +encoding["opcode"]
         )
+
+    #J type
+    # imm[20]|imm[10:1]|imm[11]|imm[19:12]|rd[11:7]|opcode[6:0]
+    elif instruct in J_type:
+        rd=operands[0]
+        imm=int(operands[1])
+        encoding=J_type[instruct]  #getting opcide information from dictionary
+        imm_binary=conv_to_bin(imm,21) #converting immediate value to 21 binary
+
+        if imm_bin is None:
+            return "INVALID NUMBERS"
+
+        immediate = (
+            imm_bin[0]+ imm_bin[10:20]+ imm_bin[9]+imm_bin[1:9]
+        )
+
+        return immediate+ reg_bits(rd) +J_type[instruct]["opcode"]
+    
+    
+
