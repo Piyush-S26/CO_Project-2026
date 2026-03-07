@@ -131,3 +131,21 @@ def parse_lines(l):
     l=l.replace(","," ")
     tkns=l.split()
     return tkns
+
+#encoding format: func7| rs2| rs1| func3| rd| opcode 
+def encode_instruction(instruct,operands):
+    #r-type
+    if instruct in R_type: #checks whether mnemonic belongs to r-type dictionary
+        rd=operands[0]
+        rs1=operands[1]
+        rs2=operands[2]
+        encoding= R_type[instruct] #get opcode, func3, func7 for this instruction
+        return(
+            encoding["func7"]#add func7 bits
+            +reg_bits(rs2)
+            +reg_bits(rs1)
+            +encoding["func3"]#add func3 bits
+            +reg_bits(rd)
+            +encoding["opcode"]#add opcode bits
+            
+        )
