@@ -147,5 +147,21 @@ def encode_instruction(instruct,operands):
             +encoding["func3"]#add func3 bits
             +reg_bits(rd)
             +encoding["opcode"]#add opcode bits
-            
+        )
+     #i type 
+    elif instruct in I_type: #checks whether mnemonic belongs to I-type dictionary 
+        rd=operands[0]
+        rs1=operands[1]
+        imm=int(operands[2])
+
+        encoding=I_type[instruct]
+        imm_bin= conv_to_bin(imm,12)
+        if imm_bin is None:
+            return "INVALID"
+        return (
+            conv_to_bin(imm,12) #immediate convterd into 12-bits binary
+            +reg_bits(rs1)
+            +encoding["func3"]
+            +reg_bits(rd)
+            +encoding["opcode"]
         )
