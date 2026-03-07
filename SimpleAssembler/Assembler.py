@@ -188,6 +188,7 @@ def encode_instruction(instruct,operands):
         return immediate+ reg_bits(rd) +J_type[instruct]["opcode"]
     
     #B type 
+    #imm[31:25]|rs2[24:20]|rs1[19:15]|func3[14:12]|imm[11:7]|opcode[6:0]
 
     elif instruct in B_type:
 
