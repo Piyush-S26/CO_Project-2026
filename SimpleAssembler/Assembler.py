@@ -34,3 +34,43 @@ REG={
     "t5":30, "x30":30,
     "t6":31, "x31":31,
 }
+
+R_type ={
+    "add":{"opcode" : "0110011", "func3":"000", "func7":"0000000"},
+    "sub":{"opcode" : "0110011", "func3":"000", "func7":"0100000"},
+    "sll":{"opcode" : "0110011", "func3":"001", "func7":"0000000"},
+    "slt":{"opcode" : "0110011", "func3":"010", "func7":"0000000"},
+    "sltu":{"opcode" : "0110011", "func3":"011", "func7":"0000000"},
+    "xor":{"opcode" : "0110011", "func3":"100", "func7":"0000000"},
+    "srl":{"opcode" : "0110011", "func3":"101", "func7":"0000000"},
+    "or":{"opcode" : "0110011", "func3":"110", "func7":"0000000"},
+    "and":{"opcode" : "0110011", "func3":"111", "func7":"0000000"}
+}
+
+I_type ={
+    "lw":{"opcode":"0000011", "func3":"010"},
+    "addi":{"opcode":"0010011","func3":"000"},
+    "sltiu":{"opcode":"0010011","func3":"000"}
+}
+
+S_type ={
+    "sw":{"opcode":"0100011", "fucn3":"010"}
+}
+
+B_type ={
+    "beq":{"opcode": "1100011", "func3": "000"},
+    "bne":{"opcode": "1100011", "func3": "001"},
+    "blt":{"opcode": "1100011", "func3": "100"},
+    "bge":{"opcode": "1100011", "func3": "101"},
+    "bltu":{"opcode": "1100011", "func3": "110"},
+    "bgeu":{"opcode": "1100011", "func3": "111"}
+}
+
+U_type ={
+    "lui":{"opcode":"0110111"},
+    "auipc":{"opcode":"0010111"}
+}
+
+J_type ={
+    "jal":{"opcode":"1101111"}
+}
