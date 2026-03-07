@@ -107,29 +107,29 @@ def reg_bits(regi):
 #To identiy labels in input
 def label_identify(lines):
     labels={}
-    pc=0
+    pc=0 #Program counter starting from 0
 
     for l in lines:
-        l=l.strip()
+        l=l.strip() #To remove leading or trailing spaces
         if l=="":
             continue
-        if ":" in l:
+        if ":" in l: #To check if label exists
             parts=l.split()
-            lbl=parts[0]
+            lbl=parts[0] #To extracting label name from input
 
             labels[lbl]=pc
-        pc+=4
+        pc+=4 #Moving pc to next instruction 
     return labels
 
 #To Parse instructions
 def parse_lines(l):
-    l=l.strip()
+    l=l.strip() #This removes extra spaces
     if ":" in l:
-        parts=l.split(":")
+        parts=l.split(":") #This splits labels and instructions
         l=parts[1]
-        l=l.strip()
-    l=l.replace(","," ")
-    tkns=l.split()
+        l=l.strip() 
+    l=l.replace(","," ") #Replace commas with blank spaces
+    tkns=l.split() #This breaks into instruction tokens
     return tkns
 
 def encode_instruction(instruct,operands):
