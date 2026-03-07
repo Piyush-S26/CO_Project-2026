@@ -103,3 +103,20 @@ def reg_bits(regi):
     binary =("0"*zeroes)+binary #add the required number of zeroes in the starting of the binary
 
     return binary
+
+#To identiy labels in input
+def label_identify(lines):
+    labels={}
+    pc=0
+
+    for l in lines:
+        l=l.strip()
+        if l=="":
+            continue
+        if ":" in l:
+            parts=l.split()
+            lbl=parts[0]
+
+            labels[lbl]=pc
+        pc+=4
+    return labels
