@@ -187,5 +187,33 @@ def encode_instruction(instruct,operands):
 
         return immediate+ reg_bits(rd) +J_type[instruct]["opcode"]
     
+    #B type 
+
+    elif instruct in B_type:
+
+        rs1= operands[0]
+        rs2= operands[1]
+        imm= int(operands[2])
+
+        imm_bin=conv_to_bin(imm,13)
+
+        if imm_bin==None:
+            return "INVALID INSTRUCTION"
+        
+        bit_12=imm_bin[0]
+        bit_10_to_5=imm_bin[1:7]
+        bit_4_to_1=imm_bin[7:11]
+        bit_11=imm_bin[11]
+
+        func3=B_type[instruct]["func3"]
+        opcode=B_type[instruct]["opcode"]
+
+        return (
+            bit_12 + bit_10_to_5 + reg_bits(rs2) + reg_bits(rs1) + func3 + bit_4_to_1 + bit_11 + opcode
+        )
     
+    else:
+        return "INVALID INSTRUCTION"
+
+        
 
