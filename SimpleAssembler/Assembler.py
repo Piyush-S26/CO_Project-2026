@@ -235,7 +235,9 @@ def encode_instruction(instruct,operands):
         
     #U type
     #imm[31:12]|rd[11:7]|opcode[6:0]
+
     elif instruct in U_type:
+        
         rd=operands[0] #Dest Reg
         imm=int(operands[1])
 
@@ -245,4 +247,7 @@ def encode_instruction(instruct,operands):
         if imm_bin is None:
             return "INVALID"
         return(imm_bin+reg_bits(rd)+encoding["opcode"])
+    
+    else:
+        return "INVALID INSTRUCTION"
     
