@@ -81,3 +81,25 @@ additional_type ={
     "halt":{"opcode":"11111111111111111111111111111111"},
     "rvrs":{"opcode":"0110011"}
 }
+
+# binary conversion
+def conv_to_bin(val,bits):
+    val = int(val)  # converting value to integeral value
+    if val<0:
+        val=(2**bits) + val   # converting negative number to 2's complement form
+    binary = bin(val)[2:]  # converting number to binary and remove '0b'
+
+    zeroes=bits-len(binary)
+    binary=("0"*zeroes)+binary
+    return binary
+
+#register conversion
+
+def reg_bits(regi):
+    numb=REG[regi] #check for the register name in the REG directory
+    binary=bin(numb)[2:] #convert register number into binary
+
+    zeroes = 5- len(binary) #if binary is shorter than 5 bits(RISC-V), this will calculate  the zeroes needed
+    binary =("0"*zeroes)+binary #add the required number of zeroes in the starting of the binary
+
+    return binary
