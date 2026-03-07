@@ -54,7 +54,7 @@ I_type ={
 }
 
 S_type ={
-    "sw":{"opcode":"0100011", "fucn3":"010"}
+    "sw":{"opcode":"0100011", "func3":"010"}
 }
 
 B_type ={
