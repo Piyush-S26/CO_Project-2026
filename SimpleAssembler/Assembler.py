@@ -50,7 +50,7 @@ R_type ={
 I_type ={
     "lw":{"opcode":"0000011", "func3":"010"},
     "addi":{"opcode":"0010011","func3":"000"},
-    "sltiu":{"opcode":"0010011","func3":"000"}
+    "sltiu":{"opcode":"0010011","func3":"011"}
 }
 
 S_type ={
@@ -89,6 +89,9 @@ def conv_to_bin(val,bits):
         val=(2**bits) + val   # converting negative number to 2's complement form
     binary = bin(val)[2:]  # converting number to binary and remove '0b'
 
+    if len(binary)>bits:
+        starting= len(binary)-bits
+        binary=binary[starting:len(binary)]
     zeroes=bits-len(binary)
     binary=("0"*zeroes)+binary
     return binary
@@ -114,7 +117,7 @@ def label_identify(lines):
         if l=="":
             continue
         if ":" in l: #To check if label exists
-            parts=l.split()
+            parts=l.split(":")
             lbl=parts[0] #To extracting label name from input
 
             labels[lbl]=pc
@@ -193,7 +196,7 @@ def encode_instruction(instruct,operands):
         rd=operands[0]
         imm=int(operands[1])
         encoding=J_type[instruct]  #getting opcide information from dictionary
-        imm_binary=conv_to_bin(imm,21) #converting immediate value to 21 binary
+        imm_bin=conv_to_bin(imm,21) #converting immediate value to 21 binary
 
         if imm_bin is None:
             return "INVALID NUMBERS"
@@ -229,7 +232,7 @@ def encode_instruction(instruct,operands):
         return (
             bit_12 + bit_10_to_5 + reg_bits(rs2) + reg_bits(rs1) + func3 + bit_4_to_1 + bit_11 + opcode
         )
-    
+        
     #U type
     #imm[31:12]|rd[11:7]|opcode[6:0]
 
