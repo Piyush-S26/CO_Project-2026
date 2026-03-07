@@ -205,4 +205,16 @@ def encode_instruction(instruct,operands):
         return immediate+ reg_bits(rd) +J_type[instruct]["opcode"]
     
     
+    #U type
+    #imm[31:12]|rd[11:7]|opcode[6:0]
+    elif instruct in U_type:
+        rd=operands[0] #Dest Reg
+        imm=int(operands[1])
 
+        encoding=U_type[instruct] #This fetches opcode
+        imm_bin=conv_to_bin(imm,20) #Converts immediate to 20-bit binary number
+
+        if imm_bin is None:
+            return "INVALID"
+        return(imm_bin+reg_bits(rd)+encoding["opcode"])
+    
