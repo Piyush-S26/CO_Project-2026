@@ -104,5 +104,30 @@ def reg_bits(regi):
 
     return binary
 
-#this is to check github
-#github check 2
+#To identiy labels in input
+def label_identify(lines):
+    labels={}
+    pc=0
+
+    for l in lines:
+        l=l.strip()
+        if l=="":
+            continue
+        if ":" in l:
+            parts=l.split()
+            lbl=parts[0]
+
+            labels[lbl]=pc
+        pc+=4
+    return labels
+
+#To Parse instructions
+def parse_lines(l):
+    l=l.strip()
+    if ":" in l:
+        parts=l.split(":")
+        l=parts[1]
+        l=l.strip()
+    l=l.replace(","," ")
+    tkns=l.split()
+    return tkns
