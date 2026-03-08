@@ -79,7 +79,7 @@ additional_type ={
     "mul":{"opcode":"0110011", "func3":"000", "func7":"0000001"},
     "rst":{"opcode": "00000000000000000000000000000000"},
     "halt":{"opcode":"11111111111111111111111111111111"},
-    "rvrs":{"opcode":"0110011"}
+    "rvrs":{"opcode":"0110011","func3":"000","func7":"0100000"}
 }
 
 # binary conversion
@@ -135,7 +135,7 @@ def parse_lines(l):
     tkns=l.split() #This breaks into instruction tokens
     return tkns
 
-def encode_instruction(instruct,operands):
+def encode_instruction(instruct,operands,pc):
 
     #R-type
     #func7[31:25]|rs2[24:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
@@ -194,7 +194,10 @@ def encode_instruction(instruct,operands):
     # imm[20]|imm[10:1]|imm[11]|imm[19:12]|rd[11:7]|opcode[6:0]
     elif instruct in J_type:
         rd=operands[0]
-        imm=int(operands[1])
+        if operands[1] in labels:
+            imm = labels[operands[1]] - pc
+        else:
+            imm = int(operands[1])
         encoding=J_type[instruct]  #getting opcide information from dictionary
         imm_bin=conv_to_bin(imm,21) #converting immediate value to 21 binary
 
@@ -214,7 +217,10 @@ def encode_instruction(instruct,operands):
 
         rs1= operands[0]
         rs2= operands[1]
-        imm= int(operands[2])
+        if operands[2] in labels:
+            imm = labels[operands[2]] - pc
+        else:
+            imm = int(operands[2])
 
         imm_bin=conv_to_bin(imm,13)
 
@@ -265,6 +271,6 @@ for raw_line in program_lines:
         continue
     opcode = parts[0] #instruction name 
     args = parts[1:]  # operands
-    machine_code = encode_instruction(opcode, args) # this does binary encoding
+    machine_code = encode_instruction(opcode, args,pc) # this does binary encoding
     print(machine_code) #output
     pc += 4
