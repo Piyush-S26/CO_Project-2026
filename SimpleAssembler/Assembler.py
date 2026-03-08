@@ -1,85 +1,145 @@
 import sys
-REG={
-    "zero":0, "x0":0,
-    "ra":1, "x1":1,
-    "sp":2, "x2":2,
-    "gp":3, "x3":3,
+reg_map={
+    "zero":0, "x0":0, 
+    "ra":1, "x1":1, 
+    "sp":2, "x2":2, 
+    "gp":3, "x3":3, 
     "tp":4, "x4":4,
-    "t0":5, "x5":5,
-    "t1":6, "x6":6,
-    "t2":7, "x7":7,
-    "s0":8, "fp":8, "x8":8,
-    "s1":9, "x9":9,
+    "t0":5, "x5":5, 
+    "t1":6, "x6":6, 
+    "t2":7, "x7":7, 
+    "s0":8, "fp":8, "x8":8, 
+    "s1":9, "x9":9, 
     "a0":10, "x10":10,
-    "a1":11, "x11":11,
-    "a2":12, "x12":12,
-    "a3":13, "x13":13,
-    "a4":14, "x14":14,
+    "a1":11, "x11":11, 
+    "a2":12, "x12":12, 
+    "a3":13, "x13":13, 
+    "a4":14, "x14":14, 
     "a5":15, "x15":15,
-    "a6":16, "x16":16,
-    "a7":17, "x17":17,
-    "s2":18, "x18":18,
-    "s3":19, "x19":19,
-    "s4":20, "x20":20,
+    "a6":16, "x16":16, 
+    "a7":17, "x17":17, 
+    "s2":18, "x18":18, 
+    "s3":19, "x19":19, 
+    "s4":20, "x20":20, 
     "s5":21, "x21":21,
     "s6":22, "x22":22,
-    "s7":23, "x23":23,
-    "s8":24, "x24":24,
-    "s9":25, "x25":25,
-    "s10":26, "x26":26,
-    "s11":27, "x27":27,
+    "s7":23, "x23":23, 
+    "s8":24, "x24":24, 
+    "s9":25, "x25":25, 
+    "s10":26, "x26":26, 
+    "s11":27, "x27":27, 
     "t3":28, "x28":28,
-    "t4":29, "x29":29,
+    "t4":29, "x29":29, 
     "t5":30, "x30":30,
     "t6":31, "x31":31,
 }
 
 R_type ={
-    "add":{"opcode" : "0110011", "func3":"000", "func7":"0000000"},
-    "sub":{"opcode" : "0110011", "func3":"000", "func7":"0100000"},
-    "sll":{"opcode" : "0110011", "func3":"001", "func7":"0000000"},
-    "slt":{"opcode" : "0110011", "func3":"010", "func7":"0000000"},
-    "sltu":{"opcode" : "0110011", "func3":"011", "func7":"0000000"},
-    "xor":{"opcode" : "0110011", "func3":"100", "func7":"0000000"},
-    "srl":{"opcode" : "0110011", "func3":"101", "func7":"0000000"},
-    "or":{"opcode" : "0110011", "func3":"110", "func7":"0000000"},
-    "and":{"opcode" : "0110011", "func3":"111", "func7":"0000000"}
+    "add":{
+        "opcode":"0110011", 
+        "func3":"000", 
+        "func7":"0000000"}, 
+    "sub":{
+        "opcode":"0110011", 
+        "func3":"000", 
+        "func7":"0100000"},
+    "sll":{
+        "opcode":"0110011", 
+        "func3":"001", 
+        "func7":"0000000"}, 
+    "slt":{
+        "opcode":"0110011", 
+        "func3":"010", 
+        "func7":"0000000"},
+    "sltu":{
+        "opcode":"0110011", 
+        "func3":"011", 
+        "func7":"0000000"}, 
+    "xor":{
+        "opcode":"0110011", 
+        "func3":"100", 
+        "func7":"0000000"},
+    "srl":{
+        "opcode":"0110011", 
+        "func3":"101", 
+        "func7":"0000000"}, 
+    "or":{
+        "opcode":"0110011", 
+        "func3":"110", 
+        "func7":"0000000"},
+    "and":{
+        "opcode":"0110011", 
+        "func3":"111", 
+        "func7":"0000000"}
 }
 
 I_type ={
-    "lw":{"opcode":"0000011", "func3":"010"},
-    "addi":{"opcode":"0010011","func3":"000"},
-    "sltiu":{"opcode":"0010011","func3":"011"},
-    "jalr":{"opcode":"1100111","func3":"000"}
+    "lw":{
+        "opcode":"0000011", 
+        "func3":"010"}, 
+    "addi":{
+        "opcode":"0010011",
+        "func3":"000"}, 
+    "sltiu":{
+        "opcode":"0010011",
+        "func3":"011"},
+    "jalr":{
+        "opcode":"1100111",
+        "func3":"000"}
 }
 
 S_type ={
-    "sw":{"opcode":"0100011", "func3":"010"}
+    "sw":{
+        "opcode":"0100011", 
+        "func3":"010"}
 }
 
 B_type ={
-    "beq":{"opcode": "1100011", "func3": "000"},
-    "bne":{"opcode": "1100011", "func3": "001"},
-    "blt":{"opcode": "1100011", "func3": "100"},
-    "bge":{"opcode": "1100011", "func3": "101"},
-    "bltu":{"opcode": "1100011", "func3": "110"},
-    "bgeu":{"opcode": "1100011", "func3": "111"}
+    "beq":{
+        "opcode":"1100011", 
+        "func3":"000"}, 
+    "bne":{
+        "opcode":"1100011", 
+        "func3":"001"}, 
+    "blt":{
+        "opcode":"1100011", 
+        "func3":"100"},
+    "bge":{
+        "opcode":"1100011", 
+        "func3":"101"}, 
+    "bltu":{
+        "opcode":"1100011", 
+        "func3":"110"}, 
+    "bgeu":{
+        "opcode":"1100011", 
+        "func3":"111"}
 }
 
 U_type ={
-    "lui":{"opcode":"0110111"},
-    "auipc":{"opcode":"0010111"}
+    "lui":{
+        "opcode":"0110111"}, 
+    "auipc":{
+        "opcode":"0010111"}
 }
 
 J_type ={
-    "jal":{"opcode":"1101111"}
+    "jal":{
+        "opcode":"1101111"}
 }
 
 additional_type ={
-    "mul":{"opcode":"0110011", "func3":"000", "func7":"0000001"},
-    "rst":{"opcode": "00000000000000000000000000000000"},
-    "halt":{"opcode":"11111111111111111111111111111111"},
-    "rvrs":{"opcode":"0110011","func3":"000","func7":"0100000"}
+    "mul":{
+        "opcode":"0110011", 
+        "func3":"000", 
+        "func7":"0000001"}, 
+    "rst":{
+        "opcode":"00000000000000000000000000000000"},
+    "halt":{
+        "opcode":"11111111111111111111111111111111"}, 
+    "rvrs":{
+        "opcode":"0110011",
+        "func3":"000",
+        "func7":"0100000"}
 }
 
 # binary conversion
@@ -101,13 +161,13 @@ def conv_to_bin(val,bits):
 def reg_bits(regi):
 
     #register error check
-    if regi not in REG:
+    if regi not in reg_map:
         print("error: invalid register")
         sys.exit()
     
     #regitser checking 
 
-    numb=REG[regi] #check for the register name in the REG directory
+    numb=reg_map[regi] #check for the register name in the reg_map directory
     binary=bin(numb)[2:] #convert register number into binary
 
     zeroes = 5- len(binary) #if binary is shorter than 5 bits(RISC-V), this will calculate  the zeroes needed
@@ -155,9 +215,8 @@ def parse_lines(l):
 def encode_instruction(instruct,operands,pc,labels):
     
     #encoding instruction error checking
-    valid_instruct = set(R_type)|set(I_type)|set(S_type)|set(B_type)|set(U_type)|set(J_type)|set(additional_type)
-    
-    if instruct not in valid_instruct:
+    if (instruct not in R_type and instruct not in I_type and instruct not in S_type and instruct not in B_type and instruct not in U_type 
+        and instruct not in J_type and instruct not in additional_type):
         print("error: invalid instruction")
         sys.exit()
     
