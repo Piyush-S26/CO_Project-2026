@@ -250,4 +250,21 @@ def encode_instruction(instruct,operands):
     
     else:
         return "INVALID INSTRUCTION"
+
     
+program_lines = sys.stdin.readlines() #this load the entire program from standard input
+labels = label_identify(program_lines) # this is first pass
+pc = 0
+
+for raw_line in program_lines:
+    cleaned_line = raw_line.strip() #this remove extra whiteespace
+    if cleaned_line == "": #this ignore blank line
+        continue
+    parts = parse_lines(cleaned_line) #this covert line into tokens 
+    if parts == []:
+        continue
+    opcode = parts[0] #instruction name 
+    args = parts[1:]  # operands
+    machine_code = encode_instruction(opcode, args) # this does binary encoding
+    print(machine_code) #output
+    pc += 4
