@@ -131,7 +131,7 @@ def label_identify(lines):
             lbl=lbl.strip() #To stop program counter from inc when label is not present
 
             if lbl in labels:
-                return "error: labels are duplicating"
+                print("error: duplicate labels")
             labels[lbl]=pc
 
         pc+=4 #Moving pc to next instruction 
@@ -184,7 +184,7 @@ def encode_instruction(instruct,operands,pc,labels):
             imm = operands[1]
       
     except :
-        return "error: invalid operands "
+        return "error: invalid operands"
 
     #R-type
     #func7[31:25]|rs2[24:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
