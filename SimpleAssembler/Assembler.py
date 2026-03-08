@@ -102,7 +102,7 @@ def reg_bits(regi):
 
     #register error check
     if regi not in REG:
-        raise Exception("invalid register")
+        raise Exception("error: invalid register")
     
     #regitser checking 
 
@@ -128,9 +128,10 @@ def label_identify(lines):
         if ":" in l: #To check if label exists
             parts=l.split(":")
             lbl=parts[0] #To extracting label name from input
+            lbl=lbl.strip() #To stop program counter from inc when label is not present
 
             if lbl in labels:
-                return "Error: labels are duplicating"
+                return "error: labels are duplicating"
             labels[lbl]=pc
 
         pc+=4 #Moving pc to next instruction 
@@ -155,7 +156,7 @@ def encode_instruction(instruct,operands,pc,labels):
     valid_instruct = set(R_type)|set(I_type)|set(S_type)|set(B_type)|set(U_type)|set(J_type)|set(additional_type)
     
     if instruct not in valid_instruct:
-        return "invalid instruction "
+        return "error: invalid instruction"
     
     #operand count error checking
     try :
@@ -183,7 +184,7 @@ def encode_instruction(instruct,operands,pc,labels):
             imm = operands[1]
       
     except :
-        return "error: invalide operands "
+        return "error: invalid operands "
 
     #R-type
     #func7[31:25]|rs2[24:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
@@ -218,7 +219,7 @@ def encode_instruction(instruct,operands,pc,labels):
         encoding=I_type[instruct]
         imm_bin= conv_to_bin(imm,12) #immediate converted into 12-bits binary
         if imm_bin is None:
-            return "INVALID"
+            return "error: invalid"
         return (
             imm_bin 
             +reg_bits(rs1)
@@ -264,7 +265,7 @@ def encode_instruction(instruct,operands,pc,labels):
         imm_bin=conv_to_bin(imm,21) #converting immediate value to 21 binary
 
         if imm_bin is None:
-            return "INVALID NUMBERS"
+            return "error: invalid numbers"
 
         immediate = (
             imm_bin[0]+ imm_bin[10:20]+ imm_bin[9]+imm_bin[1:9]
@@ -290,7 +291,7 @@ def encode_instruction(instruct,operands,pc,labels):
         imm_bin=conv_to_bin(imm,13)
 
         if imm_bin==None:
-            return "INVALID INSTRUCTION"
+            return "error: invalid instruction"
         
         bit_12=imm_bin[0]
         bit_10_to_5=imm_bin[2:8]
@@ -325,7 +326,7 @@ def encode_instruction(instruct,operands,pc,labels):
         return(imm_bin+reg_bits(rd)+encoding["opcode"])
     
     else:
-        return "INVALID INSTRUCTION"
+        return "error: invalid instruction"
 
     
 program_lines = sys.stdin.readlines() #this load the entire program from standard input
@@ -336,7 +337,7 @@ last_line=program_lines[-1]
 last_line=last_line.replace(" ","")
 last_line=last_line.strip()
 if last_line != "beqzero,zero,0":
-    print("Error: Virtual Halt is missing")
+    print("error: virtual halt is missing")
     sys.exit()
 pc = 0
 
