@@ -1,4 +1,3 @@
-import re
 import sys
 REG={
     "zero":0, "x0":0,
@@ -334,8 +333,9 @@ labels = label_identify(program_lines) # this is first pass
 
 #Virtual Halt check
 last_line=program_lines[-1]
+last_line=last_line.replace(" ","")
 last_line=last_line.strip()
-if last_line != "beq zero,zero,0":
+if last_line != "beqzero,zero,0":
     print("Error: Virtual Halt is missing")
     sys.exit()
 pc = 0
