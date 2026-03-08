@@ -145,6 +145,8 @@ def parse_lines(l):
         l=parts[1]
         l=l.strip() 
     l=l.replace(","," ") #Replace commas with blank spaces
+    l=l.replace("("," ") #Replace brackets with blank spaces
+    l=l.replace(")"," ")
     tkns=l.split() #This breaks into instruction tokens
     return tkns
 
