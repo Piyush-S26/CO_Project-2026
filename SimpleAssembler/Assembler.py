@@ -150,7 +150,7 @@ def parse_lines(l):
     tkns=l.split() #This breaks into instruction tokens
     return tkns
 
-def encode_instruction(instruct,operands,pc):
+def encode_instruction(instruct,operands,pc,labels):
     
     #encoding instruction error checking
     valid_instruct = set(R_type)|set(I_type)|set(S_type)|set(B_type)|set(U_type)|set(J_type)|set(additional_type)
@@ -342,6 +342,6 @@ for raw_line in program_lines:
         continue
     opcode = parts[0] #instruction name 
     args = parts[1:]  # operands
-    machine_code = encode_instruction(opcode, args,pc) # this does binary encoding
+    machine_code = encode_instruction(opcode, args, pc, labels) # this does binary encoding
     print(machine_code) #output
     pc += 4
