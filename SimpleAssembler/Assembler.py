@@ -50,7 +50,8 @@ R_type ={
 I_type ={
     "lw":{"opcode":"0000011", "func3":"010"},
     "addi":{"opcode":"0010011","func3":"000"},
-    "sltiu":{"opcode":"0010011","func3":"011"}
+    "sltiu":{"opcode":"0010011","func3":"011"},
+    "jalr":{"opcode":"1100111","func3":"000"}
 }
 
 S_type ={
