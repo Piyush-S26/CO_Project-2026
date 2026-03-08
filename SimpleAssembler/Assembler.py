@@ -331,6 +331,13 @@ def encode_instruction(instruct,operands,pc,labels):
     
 program_lines = sys.stdin.readlines() #this load the entire program from standard input
 labels = label_identify(program_lines) # this is first pass
+
+#Virtual Halt check
+last_line=program_lines[-1]
+last_line=last_line.strip()
+if last_line != "beq zero,zero,0":
+    print("Error: Virtual Halt is missing")
+    sys.exit()
 pc = 0
 
 for raw_line in program_lines:
