@@ -167,14 +167,20 @@ def encode_instruction(instruct,operands,pc):
     
     if instruct not in valid_instruct:
         return "invalid instruction "
+    
+
      #I-type 
      #imm[31:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
 
     elif instruct in I_type: #checks whether instruction belongs to I-type dictionary 
         rd=operands[0] #destination register
         rs1=operands[1] #source 1 register
-        imm=int(operands[2]) #source 2 register
 
+        try:
+            imm=int(operands[2]) #source 2 register
+        except:
+            return "error: invalid immediate value"
+        
         encoding=I_type[instruct]
         imm_bin= conv_to_bin(imm,12) #immediate converted into 12-bits binary
         if imm_bin is None:
@@ -192,7 +198,11 @@ def encode_instruction(instruct,operands,pc):
 
     elif instruct in S_type: #checks whether instruction belongs to S-type dictionary
         rs2=operands[0] #Value register
-        imm=int(operands[1]) #Immediate offset
+        try:
+            imm=int(operands[1]) #Immediate offset
+        except:
+            return "error: invalid immediate value"
+        
         rs1=operands[2]
         
         encoding=S_type[instruct] #This fetches opcode and func3
@@ -211,7 +221,11 @@ def encode_instruction(instruct,operands,pc):
         if operands[1] in labels:
             imm = labels[operands[1]] - pc
         else:
-            imm = int(operands[1])
+            try:
+                imm = int(operands[1])
+            except:
+                return "error: invalid immediate value"
+            
         encoding=J_type[instruct]  #getting opcide information from dictionary
         imm_bin=conv_to_bin(imm,21) #converting immediate value to 21 binary
 
@@ -234,7 +248,10 @@ def encode_instruction(instruct,operands,pc):
         if operands[2] in labels:
             imm = labels[operands[2]] - pc
         else:
-            imm = int(operands[2])
+            try:
+                imm = int(operands[2])
+            except:
+                return "error: invalid immediate value"
 
         imm_bin=conv_to_bin(imm,13)
 
@@ -259,9 +276,14 @@ def encode_instruction(instruct,operands,pc):
     elif instruct in U_type:
         
         rd=operands[0] #Dest Reg
-        imm=int(operands[1])
+
+        try:
+            imm=int(operands[1])
+        except:
+            return "error: invalid immediate value"
 
         encoding=U_type[instruct] #This fetches opcode
+
         imm_bin=conv_to_bin(imm,20) #Converts immediate to 20-bit binary number
 
         if imm_bin is None:
