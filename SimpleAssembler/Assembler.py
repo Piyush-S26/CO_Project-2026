@@ -102,7 +102,8 @@ def reg_bits(regi):
 
     #register error check
     if regi not in REG:
-        raise Exception("error: invalid register")
+        print("error: invalid register")
+        sys.exit()
     
     #regitser checking 
 
@@ -132,6 +133,7 @@ def label_identify(lines):
 
             if lbl in labels:
                 print("error: duplicate labels")
+                sys.exit()
             labels[lbl]=pc
 
         pc+=4 #Moving pc to next instruction 
@@ -156,7 +158,8 @@ def encode_instruction(instruct,operands,pc,labels):
     valid_instruct = set(R_type)|set(I_type)|set(S_type)|set(B_type)|set(U_type)|set(J_type)|set(additional_type)
     
     if instruct not in valid_instruct:
-        return "error: invalid instruction"
+        print("error: invalid instruction")
+        sys.exit()
     
     #operand count error checking
     try :
@@ -184,7 +187,8 @@ def encode_instruction(instruct,operands,pc,labels):
             imm = operands[1]
       
     except :
-        return "error: invalid operands"
+        print("error: invalid operands")
+        sys.exit()
 
     #R-type
     #func7[31:25]|rs2[24:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
@@ -214,7 +218,8 @@ def encode_instruction(instruct,operands,pc,labels):
         try:
             imm=int(operands[2]) #source 2 register
         except:
-            return "error: invalid immediate value"
+            print("error: invalid immediate value")
+            sys.exit()
         
         encoding=I_type[instruct]
         imm_bin= conv_to_bin(imm,12) #immediate converted into 12-bits binary
@@ -236,7 +241,8 @@ def encode_instruction(instruct,operands,pc,labels):
         try:
             imm=int(operands[1]) #Immediate offset
         except:
-            return "error: invalid immediate value"
+            print("error: invalid immediate value")
+            sys.exit()
         
         rs1=operands[2]
         
@@ -259,7 +265,8 @@ def encode_instruction(instruct,operands,pc,labels):
             try:
                 imm = int(operands[1])
             except:
-                return "error: invalid immediate value"
+                print("error: invalid immediate value")
+                sys.exit()
             
         encoding=J_type[instruct]  #getting opcide information from dictionary
         imm_bin=conv_to_bin(imm,21) #converting immediate value to 21 binary
@@ -286,7 +293,8 @@ def encode_instruction(instruct,operands,pc,labels):
             try:
                 imm = int(operands[2])
             except:
-                return "error: invalid immediate value"
+                print("error: invalid immediate value")
+                sys.exit()
 
         imm_bin=conv_to_bin(imm,13)
 
@@ -294,9 +302,9 @@ def encode_instruction(instruct,operands,pc,labels):
             return "error: invalid instruction"
         
         bit_12=imm_bin[0]
-        bit_10_to_5=imm_bin[2:8]
-        bit_4_to_1=imm_bin[8:12]
-        bit_11=imm_bin[1]
+        bit_10_to_5=imm_bin[1:7]
+        bit_4_to_1=imm_bin[7:11]
+        bit_11=imm_bin[11]
 
         func3=B_type[instruct]["func3"]
         opcode=B_type[instruct]["opcode"]
@@ -315,7 +323,8 @@ def encode_instruction(instruct,operands,pc,labels):
         try:
             imm=int(operands[1])
         except:
-            return "error: invalid immediate value"
+            print("error: invalid immediate value")
+            sys.exit()
 
         encoding=U_type[instruct] #This fetches opcode
 
