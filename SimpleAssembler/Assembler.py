@@ -99,6 +99,13 @@ def conv_to_bin(val,bits):
 #register conversion
 
 def reg_bits(regi):
+
+    #register error check
+    if regi not in REG:
+        raise Exception("invalid register")
+    
+    #regitser checking 
+
     numb=REG[regi] #check for the register name in the REG directory
     binary=bin(numb)[2:] #convert register number into binary
 
@@ -106,6 +113,8 @@ def reg_bits(regi):
     binary =("0"*zeroes)+binary #add the required number of zeroes in the starting of the binary
 
     return binary
+
+
 
 #To identiy labels in input
 def label_identify(lines):
@@ -153,6 +162,11 @@ def encode_instruction(instruct,operands,pc):
             +reg_bits(rd)
             +encoding["opcode"] #add opcode bits
         )
+    #encoding instruction error check
+    valid_instruct = set(R_type)|set(I_type)|set(S_type)|set(B_type)|set(U_type)|set(J_type)|set(additional_type)
+    
+    if instruct not in valid_instruct:
+        return "invalid instruction "
      #I-type 
      #imm[31:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
 
