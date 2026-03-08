@@ -293,9 +293,9 @@ def encode_instruction(instruct,operands,pc,labels):
             return "INVALID INSTRUCTION"
         
         bit_12=imm_bin[0]
-        bit_10_to_5=imm_bin[1:7]
-        bit_4_to_1=imm_bin[7:11]
-        bit_11=imm_bin[11]
+        bit_10_to_5=imm_bin[2:8]
+        bit_4_to_1=imm_bin[8:12]
+        bit_11=imm_bin[1]
 
         func3=B_type[instruct]["func3"]
         opcode=B_type[instruct]["opcode"]
