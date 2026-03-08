@@ -130,12 +130,9 @@ def label_identify(lines):
             parts=l.split(":")
             lbl=parts[0] #To extracting label name from input
 
-        try:
             if lbl in labels:
-                raise Exception("duplicating labels")
+                return "Error: labels are duplicating"
             labels[lbl]=pc
-        except:
-            return "error: duplicating label"
 
         pc+=4 #Moving pc to next instruction 
     return labels
