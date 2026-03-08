@@ -1,2 +1,0 @@
-# CO_Project-2026
-CSE112-COMPUTER-ORGANIZATION Group Project
