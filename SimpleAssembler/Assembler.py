@@ -145,6 +145,40 @@ def parse_lines(l):
     return tkns
 
 def encode_instruction(instruct,operands,pc):
+    
+    #encoding instruction error checking
+    valid_instruct = set(R_type)|set(I_type)|set(S_type)|set(B_type)|set(U_type)|set(J_type)|set(additional_type)
+    
+    if instruct not in valid_instruct:
+        return "invalid instruction "
+    
+    #operand count error checking
+    try :
+        if instruct in R_type:
+            rd = operands[0]
+            rs1 = operands[1]
+            rs2 = operands[2]
+        elif instruct in I_type:
+            rd = operands[0]
+            rs1 = operands[1]
+            imm = operands[2]
+        elif instruct in S_type:
+            rs2 = operands[0]
+            imm = operands[1]
+            rs1 = operands[2]
+        elif instruct in J_type:
+            rd = operands[0]
+            imm = operands[1]   
+        elif instruct in B_type:
+            rs1 = operands[0]
+            rs2 = operands[1]
+            imm = operands[2]
+        elif instruct in U_type:
+            rd = operands[0]
+            imm = operands[1]
+      
+    except :
+        return "error: invalide operands "
 
     #R-type
     #func7[31:25]|rs2[24:20]|rs1[19:15]|func3[14:12]|rd[11:7]|opcode[6:0]
@@ -162,11 +196,6 @@ def encode_instruction(instruct,operands,pc):
             +reg_bits(rd)
             +encoding["opcode"] #add opcode bits
         )
-    #encoding instruction error check
-    valid_instruct = set(R_type)|set(I_type)|set(S_type)|set(B_type)|set(U_type)|set(J_type)|set(additional_type)
-    
-    if instruct not in valid_instruct:
-        return "invalid instruction "
     
 
      #I-type 
