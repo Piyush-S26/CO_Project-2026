@@ -280,7 +280,7 @@ def encode_instruction(instruct,operands,pc,labels):
         else:
             rs1=operands[1]
             imm_val=operands[2]
-            
+
         if imm_val in labels:
             imm = labels[imm_val] - pc
         else:
@@ -424,7 +424,7 @@ for i in reversed(program_lines):
 instr=last_line[0]
 r1=last_line[1]
 r2=last_line[2]
-imme=last_line[3]
+imme=last_line[3].strip()
 
 if instr=="beq" and r1 in ["zero","x0"] and r2 in ["zero","x0"] and imme=="0":
     pass
