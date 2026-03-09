@@ -274,12 +274,15 @@ def encode_instruction(instruct,operands,pc,labels):
         rd=operands[0] #destination register
         rs1=operands[1] #source 1 register
 
-        try:
-            imm=int(operands[2]) #source 2 register
-        except:
-            print("error: invalid immediate value")
-            sys.exit()
-        
+        if operands[2]in labels:
+            imm= labels[operands[2]]-pc
+        else:
+            try:
+                imm=int(operands[2])
+            except:
+                print("error:invalid immediate value")
+                sys.exit()
+                
         encoding=I_type[instruct]
         imm_bin= conv_to_bin(imm,12) #immediate converted into 12-bits binary
         if imm_bin is None:
@@ -396,19 +399,34 @@ def encode_instruction(instruct,operands,pc,labels):
     else:
         return "error: invalid instruction"
 
-    
-program_lines = sys.stdin.readlines() #this load the entire program from standard input
+input_files=sys.argv[1] #this load the entire program from standard input
+output_files=sys.argv[2]
+with open(input_files,"r") as f:
+    program_lines=f.readlines()
+
+out=open(output_files,"w")
+
 labels = label_identify(program_lines) # this is first pass
 
 #Virtual Halt check
-last_line=program_lines[-1]
-last_line=last_line.replace(" ","")
-last_line=last_line.strip()
-if last_line != "beqzero,zero,0":
-    print("error: virtual halt is missing")
-    sys.exit()
-pc = 0
+last_line=None
+for i in reversed(program_lines):
+    if i.strip() != "":
+        last_line=parse_lines(i)
+        break 
 
+instr=last_line[0]
+r1=last_line[1]
+r2=last_line[2]
+imme=last_line[3]
+
+if instr=="beq" and r1 in ["zero","x0"] and r2 in ["zero","x0"] and imme=="0":
+    pass
+else:
+    print("error:virtual halt is missing")
+    sys.exit()
+
+pc=0
 for raw_line in program_lines:
     cleaned_line = raw_line.strip() #this remove extra whiteespace
     if cleaned_line == "": #this ignore blank line
@@ -419,5 +437,5 @@ for raw_line in program_lines:
     opcode = parts[0] #instruction name 
     args = parts[1:]  # operands
     machine_code = encode_instruction(opcode, args, pc, labels) # this does binary encoding
-    print(machine_code) #output
+
     pc += 4
