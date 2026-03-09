@@ -280,9 +280,8 @@ def encode_instruction(instruct,operands,pc,labels):
         else:
             rs1=operands[1]
             imm_val=operands[2]
-
         if imm_val in labels:
-            imm = labels[imm_val] - pc
+            imm=labels[imm_val]-pc
         else:
             try:
                 imm=int(imm_val)
