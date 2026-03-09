@@ -1,3 +1,8 @@
+#GROUP NO 66
+#PIYUSH - 2025370
+#PIYUSH BHAMBRI - 2025371
+#RUDRA PALIWAL - 2025435
+#PRAGYA PAL - 2025379
 import sys
 reg_map={
     "zero":0, "x0":0, 
