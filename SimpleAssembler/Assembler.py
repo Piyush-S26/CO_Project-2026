@@ -438,7 +438,7 @@ for raw_line in program_lines:
     if cleaned_line == "": #this ignore blank line
         continue
     parts = parse_lines(cleaned_line) #this covert line into tokens 
-    if parts == []:
+    if len(parts) ==0:
         continue
     opcode = parts[0] #instruction name 
     args = parts[1:]  # operands
