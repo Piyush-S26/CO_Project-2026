@@ -273,23 +273,27 @@ def encode_instruction(instruct,operands,pc,labels):
 
     elif instruct in I_type: #checks whether instruction belongs to I-type dictionary 
         rd=operands[0] #destination register
-        rs1=operands[1] #source 1 register
 
-        if operands[2]in labels:
-            imm= labels[operands[2]]-pc
+        if instruct=="lw":
+            imm=operands[1]
+            rs1=operands[2]
+        else:
+            rs1=operands[1]
+            imm_val=operands[2]
+        if imm_val in labels:
+            imm = labels[imm_val] - pc
         else:
             try:
-                imm=int(operands[2])
+                imm=int(imm_val)
             except:
-                print("error:invalid immediate value")
+                print("error: invalid immediate value")
                 sys.exit()
 
-        encoding=I_type[instruct]
-        imm_bin= conv_to_bin(imm,12) #immediate converted into 12-bits binary
-        if imm_bin is None:
-            return "error: invalid"
-        return (
-            imm_bin 
+        enocoding=I_type[instruct]
+        imm_bin=conv_to_bin(imm,12)
+
+        return(
+            imm_bin
             +reg_bits(rs1)
             +encoding["func3"]
             +reg_bits(rd)
