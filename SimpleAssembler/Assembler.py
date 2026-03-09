@@ -414,22 +414,6 @@ out=open(output_files,"w")
 labels = label_identify(program_lines) # this is first pass
 
 #Virtual Halt check
-# last_line=None
-# for i in reversed(program_lines):
-#     if i.strip() != "":
-#         last_line=parse_lines(i)
-#         break 
-
-# instr=last_line[0]
-# r1=last_line[1]
-# r2=last_line[2]
-# imme=last_line[3].strip()
-
-# if instr=="beq" and r1 in ["zero","x0"] and r2 in ["zero","x0"] and imme=="0":
-#     pass
-# else:
-#     print("error: virtual halt is missing")
-#     sys.exit()
 last_instr = None
 
 for line in reversed(program_lines):
