@@ -100,7 +100,7 @@ B_type ={
         "func3":"000"}, 
     "bne":{
         "opcode":"1100011", 
-        "func3":"001"}, 
+        "func3":"001"},
     "blt":{
         "opcode":"1100011", 
         "func3":"100"},
@@ -417,12 +417,15 @@ labels = label_identify(program_lines) # this is first pass
 last_instr = None
 
 for line in reversed(program_lines):
+    line = line.strip()
+    if line == "":
+        continue
+
     tokens = parse_lines(line)
+
     if len(tokens) > 0:
         last_instr = tokens
         break
-
-
 if last_instr is None or last_instr[0] != "beq" or last_instr[1] not in ["zero","x0"] or last_instr[2] not in ["zero","x0"] or last_instr[3] != "0":
     print("error: virtual halt is missing")
     sys.exit()
