@@ -413,23 +413,6 @@ out=open(output_files,"w")
 
 labels = label_identify(program_lines) # this is first pass
 
-#Virtual Halt check
-last_instr = None
-
-for line in reversed(program_lines):
-    line = line.strip()
-    if line == "":
-        continue
-
-    tokens = parse_lines(line)
-
-    if len(tokens) > 0:
-        last_instr = tokens
-        break
-if last_instr is None or last_instr[0] != "beq" or last_instr[1] not in ["zero","x0"] or last_instr[2] not in ["zero","x0"] or last_instr[3] != "0":
-    print("error: virtual halt is missing")
-    sys.exit()
-
 pc=0
 for raw_line in program_lines:
     cleaned_line = raw_line.strip() #this remove extra whiteespace
@@ -446,3 +429,26 @@ for raw_line in program_lines:
     pc += 4
 
 out.close()
+
+#virtual halt checker
+last_instr=None
+for line in reversed(program_lines):
+    line=line.strip()
+    if line=="":
+        continue
+    parts=parse_lines(line)
+    if len(parts)==0:
+        continue
+
+    last_instr=parts
+    break
+
+if (last_instr is None or
+    len(last_instr) < 4 or
+    last_instr[0] != "beq" or
+    last_instr[1] not in ["zero","x0"] or
+    last_instr[2] not in ["zero","x0"] or
+    last_instr[3] != "0"):
+
+    print("error: virtual halt is missing")
+    sys.exit()
