@@ -188,13 +188,14 @@ def label_identify(lines):
             continue
         if ":" in l: #To check if label exists
             parts=l.split(":")
-            lbl=parts[0] #To extracting label name from input
-            lbl=lbl.strip() #To stop program counter from inc when label is not present
-
+            lbl=parts[0].strip() #To extracting label name from input
+            
             if lbl in labels:
                 print("error: duplicate labels")
                 sys.exit()
             labels[lbl]=pc
+            if parts[1].strip() == "":
+                continue
 
         pc+=4 #Moving pc to next instruction 
     return labels
@@ -282,7 +283,7 @@ def encode_instruction(instruct,operands,pc,labels):
             except:
                 print("error:invalid immediate value")
                 sys.exit()
-                
+
         encoding=I_type[instruct]
         imm_bin= conv_to_bin(imm,12) #immediate converted into 12-bits binary
         if imm_bin is None:
@@ -423,7 +424,7 @@ imme=last_line[3]
 if instr=="beq" and r1 in ["zero","x0"] and r2 in ["zero","x0"] and imme=="0":
     pass
 else:
-    print("error:virtual halt is missing")
+    print("error: virtual halt is missing")
     sys.exit()
 
 pc=0
@@ -437,5 +438,8 @@ for raw_line in program_lines:
     opcode = parts[0] #instruction name 
     args = parts[1:]  # operands
     machine_code = encode_instruction(opcode, args, pc, labels) # this does binary encoding
-
+    out.write(machine_code)
+    out.write("\n")
     pc += 4
+
+out.close()
