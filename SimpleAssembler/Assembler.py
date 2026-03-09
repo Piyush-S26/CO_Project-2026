@@ -422,12 +422,11 @@ for line in reversed(program_lines):
         last_instr = tokens
         break
 
-if not (last_instr[0] == "beq"
-        and last_instr[1] in ["zero","x0"]
-        and last_instr[2] in ["zero","x0"]
-        and last_instr[3] == "0"):
+
+if last_instr is None or last_instr[0] != "beq" or last_instr[1] not in ["zero","x0"] or last_instr[2] not in ["zero","x0"] or last_instr[3] != "0":
     print("error: virtual halt is missing")
     sys.exit()
+
 pc=0
 for raw_line in program_lines:
     cleaned_line = raw_line.strip() #this remove extra whiteespace
