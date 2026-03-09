@@ -275,11 +275,12 @@ def encode_instruction(instruct,operands,pc,labels):
         rd=operands[0] #destination register
 
         if instruct=="lw":
-            imm=operands[1]
+            imm_val=operands[1]
             rs1=operands[2]
         else:
             rs1=operands[1]
             imm_val=operands[2]
+            
         if imm_val in labels:
             imm = labels[imm_val] - pc
         else:
@@ -289,7 +290,7 @@ def encode_instruction(instruct,operands,pc,labels):
                 print("error: invalid immediate value")
                 sys.exit()
 
-        enocoding=I_type[instruct]
+        encoding=I_type[instruct]
         imm_bin=conv_to_bin(imm,12)
 
         return(
