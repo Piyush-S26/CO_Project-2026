@@ -279,3 +279,20 @@ def run_prog(instruc):
         val = mem.get(addr, 0)
         state.append(f"{form_hex32(addr)}:{form_bin32(val)}")
     return state
+#INPUT
+def load_instruc(path):
+    instruc=[]
+    with open(path,"r") as f:
+        for line_num, line in enumerate(f, start=1):
+            line=line.strip()
+            if not line:
+                continue
+            #validate 32-bit binary instruction
+            if len(line)!=32 or any(c not in "01" for c in line):
+                raise Exception(f"Invalid instruction at line {line_num}")
+            instruc.append(line)
+    if not instruc:
+        raise Exception("Empty program")
+    if len(instruc)>max_prog_size:
+        raise Exception("Program too large")
+    return instruc
