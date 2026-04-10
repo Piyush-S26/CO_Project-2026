@@ -99,3 +99,20 @@ def lw(mem,address):
 def sw(mem,address,val):
     address=to_unsign32(address)
     mem[address]=to_unsign32(val)
+
+def app_state(state,pc,registers):
+    #PC + all registers 
+    line=[form_bin32(pc)] 
+    line.extend(form_bin32(r)for r in registers)
+    state.append(" ".join(line)+" ")
+
+def execute_step(pc,registers,mem,instruc,state):
+    #check PC alignment
+    if pc%4 != 0:
+        raise Exception("invalid nstruction address")
+    idx=pc//4
+    if idx < 0 or idx >= len(instruc):
+        raise Exception("PC is out of range")
+    bits=instruc[idx]
+    opcode=bits[25:32] 
+    halt=False
