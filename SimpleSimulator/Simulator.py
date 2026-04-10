@@ -50,3 +50,19 @@ def decode_i(bits):  #I- type instructions
         "func3": bits[17:20],
         "rd": bin_to_integ(bits[20:25]),
     }
+
+def decode_b(bits):  #B type instrcution
+    imm_bits=bits[0]+bits[24]+bits[1:7]+bits[20:24]+"0"
+    return {
+        "imme":sign_ext(bin_to_integ(imm_bits),13),
+        "rs2":bin_to_integ(bits[7:12]),
+        "rs1":bin_to_integ(bits[12:17]),
+        "func3": bits[17:20],
+    }
+
+def decode_u(bits):  #U type instructions
+    return {
+        "imme":bin_to_integ(bits[0:20])<<12,
+        "rd":bin_to_integ(bits[20:25]),
+    }
+
