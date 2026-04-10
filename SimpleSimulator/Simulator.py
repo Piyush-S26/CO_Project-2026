@@ -81,3 +81,21 @@ def decode_j(bits): # J type instruction
         "imme": sign_ext(bin_to_integ(imm_bits), 21),
         "rd": bin_to_integ(bits[20:25]),
     }
+
+#mem helpers
+#This ensures address is valid and word aligned
+def check_mem_add(address):
+    address=to_unsign32(address)
+    if address%4 != 0:
+        raise invld_mem_acc()
+    return address
+
+#Load word from memor(default=0)
+def lw(mem,address):
+    address=to_unsign32(address)
+    return mem.get(address,0) #(default=0 if not presuent)
+
+#Stores word in memory
+def sw(mem,address,val):
+    address=to_unsign32(address)
+    mem[address]=to_unsign32(val)
