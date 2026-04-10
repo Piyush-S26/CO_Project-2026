@@ -256,3 +256,26 @@ def execute_step(pc,registers,mem,instruc,state):
     registers[0]=0
     app_state(state,pc,registers)
     return pc,halt
+# RUN
+def run_prog(instruc):
+    pc=0
+    registers=[0]*32
+    registers[2]=stack_pointer_init  #initialize stack pointer
+    mem={}
+    state=[]
+    try:
+        for _ in range(100000):  #execution limit(avoid infinite loop)
+            pc, halt = execute_step(pc, registers, mem, instruc, state)
+            if halt:
+                break
+        else:
+            raise Exception("Program did not halt")
+    except invld_mem_acc:
+        return state  
+
+    #dump memory contens
+    for i in range(total_data):
+        addr = DATA_BASE_addr + i * 4
+        val = mem.get(addr, 0)
+        state.append(f"{form_hex32(addr)}:{form_bin32(val)}")
+    return state
