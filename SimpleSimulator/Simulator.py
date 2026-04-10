@@ -116,3 +116,37 @@ def execute_step(pc,registers,mem,instruc,state):
     bits=instruc[idx]
     opcode=bits[25:32] 
     halt=False
+
+    #R Type
+    if opcode=="0110011":
+        f = decode_r(bits)  #This decode R-type fields
+        val1 = registers[f["rs1"]]
+        val2 = registers[f["rs2"]]
+        #These Convert to signed for arithmetic ops
+        val1_s = to_sign32(val1)
+        val2_s = to_sign32(val2)
+        #ALU operations based on func3 & func7
+        if f["func7"]=="0000000" and f["func3"]=="000":
+            res = val1_s + val2_s  #ADD
+        elif f["func7"]=="0100000" and f["func3"]=="000":
+            res = val1_s-val2_s    #SUB
+        elif f["func3"]=="001":
+            res = val1 << (val2 &0x1F)  #SLL
+        elif f["func3"]=="010":
+            res = 1 if val1_s < val2_s else 0  #SLT
+        elif f["func3"]=="011":
+            res = 1 if val1 <val2 else 0  #SLTU
+        elif f["func3"]=="100":
+            res = val1^val2  #XOR
+        elif f["func3"]=="101":
+            res = val1 >> (val2 & 0x1F) #SRL
+        elif f["func3"]=="110":
+            res = val1|val2  #OR
+        elif f["func3"]=="111":
+            res = val1&val2  #AND
+        else:
+            raise Exception("Unsupported R-type")
+        
+        if f["rd"]!= 0:    # Write resuult to destination register(except x0)
+            registers[f["rd"]] = to_unsign32(res)
+        pc+= 4
