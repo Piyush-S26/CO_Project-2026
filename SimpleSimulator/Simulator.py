@@ -296,3 +296,15 @@ def load_instruc(path):
     if len(instruc)>max_prog_size:
         raise Exception("Program too large")
     return instruc
+# Main 
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: python3 sim.py <input> <output>")
+        sys.exit(1)
+    instruc=load_instruc(sys.argv[1])
+    state=run_prog(instruc)
+    with open(sys.argv[2], "w") as f:
+        f.write("\n".join(state) + "\n")
+
+if __name__ == "__main__":
+    main()
