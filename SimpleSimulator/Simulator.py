@@ -150,3 +150,26 @@ def execute_step(pc,registers,mem,instruc,state):
         if f["rd"]!= 0:    # Write resuult to destination register(except x0)
             registers[f["rd"]] = to_unsign32(res)
         pc+= 4
+
+    #I Type
+    elif opcode=="0010011":
+        f=decode_i(bits)
+        src=registers[f["rs1"]]
+        src_s=to_sign32(src)
+    #ALU immeediate operations
+        if f["func3"]=="000":
+            res = src_s+f["imme"]
+        elif f["func3"] =="011":
+            res=1 if src < to_unsign32(f["imme"]) else 0
+        else:
+            raise Exception("Unsupported I-type")
+        if f["rd"] != 0:
+            registers[f["rd"]]=to_unsign32(res)
+        pc += 4
+
+    #Store
+    elif opcode=="0100011":
+        f=decode_s(bits)
+        addr = check_mem_add(registers[f["rs1"]]+f["imme"])
+        sw(mem,addr,registers[f["rs2"]])
+        pc += 4
