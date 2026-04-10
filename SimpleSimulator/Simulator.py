@@ -192,3 +192,26 @@ def execute_step(pc,registers,mem,instruc,state):
 
         val1_s=to_sign32(val1)
         val2_s=to_sign32(val2)
+
+    #  checking Branch condition
+        if f["func3"]=="000":
+            taken=val1_s==val2_s   #BEQ
+        elif f["func3"]=="001":
+            taken=val1_s!=val2_s   #BNE
+        elif f["func3"]=="100":
+            taken=val1_s<val2_s     #BLT
+        elif f["func3"]=="101":
+            taken=val1_s>=val2_s   #BGE 
+        elif f["func3"]=="110":
+            taken=val1<val2        #BLTU
+        elif f["func3"]=="111":
+            taken=val1>=val2      #BGEU
+        else:
+            raise Exception("unsupported branch")
+
+        pc =pc+f["imme"] if taken else pc + 4
+#Detect halt condition(all zero instruction)
+        halt = (
+            f["func3"]=="000" and f["rs1"]==0 and f["rs2"]== 0 and f["imme"]== 0
+        )
+
