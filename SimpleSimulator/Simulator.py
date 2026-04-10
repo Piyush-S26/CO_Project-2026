@@ -173,3 +173,22 @@ def execute_step(pc,registers,mem,instruc,state):
         addr = check_mem_add(registers[f["rs1"]]+f["imme"])
         sw(mem,addr,registers[f["rs2"]])
         pc += 4
+ 
+    #LOAD type
+    elif opcode =="0000011":
+        f=decode_i(bits)
+        #effective address= base + offset
+        addr=check_mem_add(registers[f["rs1"]] + f["imme"])  #effective address
+        val=lw(mem, addr)
+        if f["rd"]!= 0:
+            registers[f["rd"]]=val
+        pc+= 4
+
+    #Branch type
+    elif opcode=="1100011":
+        f=decode_b(bits)
+        a=registers[f["rs1"]]
+        b=registers[f["rs2"]]
+
+        val1_s=to_sign32(val1)
+        val2_s=to_sign32(val2)
