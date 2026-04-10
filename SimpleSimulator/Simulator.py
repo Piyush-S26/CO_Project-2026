@@ -9,6 +9,7 @@ import sys
 # memory configuration
 DATA_BASE_addr = 0x00010000
 total_data = 32
+
 stack_pointer_init = 0x0000017C
 max_prog_size = 64
 
@@ -20,14 +21,17 @@ class invld_mem_acc(Exception):
 def to_unsign32(val): #for val to stay within 32-bit unsigned range
     return val & 0xFFFFFFFF
 
+
 def to_sign32(val): #coverts unsigned 32-bit to signed 2's complement
     val = to_unsign32(val)
     if val >= (1<<31):
         return val - (1<<32)
+    
     return val
 
 def sign_ext(val,bits): #extends sign for immeediate vals
     sign_bit = 1<<(bits-1)
+
     return (val^sign_bit) - sign_bit
 
 def bin_to_integ(bits): #converts binary to integer 
@@ -37,6 +41,7 @@ def form_bin32(val):
     return "0b" + format(to_unsign32(val),"032b") #formats val as 32-bit binary string 
 
 def form_hex32(val):
+
     return "0x" + format(to_unsign32(val),"08X") #formats val as 32-bit hexadecimal string 
 
 #Decoders
@@ -45,6 +50,7 @@ def decode_r(bits):
     return {
         "func7": bits[0:7],
         "rs2": bin_to_integ(bits[7:12]),
+
         "rs1": bin_to_integ(bits[12:17]),
         "func3": bits[17:20],
         "rd": bin_to_integ(bits[20:25]),
@@ -54,12 +60,15 @@ def decode_i(bits):  #I- type instructions
     return {
         "imme": sign_ext(bin_to_integ(bits[0:12]), 12),
         "rs1": bin_to_integ(bits[12:17]),
+
         "func3": bits[17:20],
+
         "rd": bin_to_integ(bits[20:25]),
     }
 
 def decode_b(bits):  #B type instrcution
     imm_bits=bits[0]+bits[24]+bits[1:7]+bits[20:24]+"0"
+
     return {
         "imme":sign_ext(bin_to_integ(imm_bits),13),
         "rs2":bin_to_integ(bits[7:12]),
@@ -69,6 +78,7 @@ def decode_b(bits):  #B type instrcution
 
 def decode_u(bits):  #U type instructions
     return {
+
         "imme":bin_to_integ(bits[0:20])<<12,
         "rd":bin_to_integ(bits[20:25]),
     }
@@ -76,7 +86,9 @@ def decode_u(bits):  #U type instructions
 def decode_s(bits):  #S type instructions
     imm_bits=bits[0:7]+bits[20:25]
     return {
+
         "imme": sign_ext(bin_to_integ(imm_bits), 12),
+        
         "rs2": bin_to_integ(bits[7:12]),
         "rs1": bin_to_integ(bits[12:17]),
         "func3": bits[17:20],
@@ -85,6 +97,7 @@ def decode_s(bits):  #S type instructions
 def decode_j(bits): # J type instruction
     imm_bits = bits[0]+bits[12:20]+bits[11]+bits[1:11]+"0"
     return {
+
         "imme": sign_ext(bin_to_integ(imm_bits), 21),
         "rd": bin_to_integ(bits[20:25]),
     }
@@ -93,23 +106,28 @@ def decode_j(bits): # J type instruction
 #This ensures address is valid and word aligned
 def check_mem_add(address):
     address=to_unsign32(address)
+
     if address%4 != 0:
         raise invld_mem_acc()
     return address
 
 #Load word from memor(default=0)
 def lw(mem,address):
+
     address=to_unsign32(address)
+
     return mem.get(address,0) #(default=0 if not presuent)
 
 #Stores word in memory
 def sw(mem,address,val):
     address=to_unsign32(address)
+
     mem[address]=to_unsign32(val)
 
 def app_state(state,pc,registers):
     #PC + all registers 
     line=[form_bin32(pc)] 
+
     line.extend(form_bin32(r)for r in registers)
     state.append(" ".join(line)+" ")
 
@@ -172,6 +190,7 @@ def execute_step(pc,registers,mem,instruc,state):
             raise Exception("Unsupported I-type")
         if f["rd"] != 0:
             registers[f["rd"]]=to_unsign32(res)
+
         pc+=4
 
     #Store
@@ -188,14 +207,17 @@ def execute_step(pc,registers,mem,instruc,state):
         addr=check_mem_add(registers[f["rs1"]] + f["imme"])  #effective address
         val=lw(mem, addr)
         if f["rd"]!= 0:
+
             registers[f["rd"]]=val
         pc+=4
 
     #Branch type
     elif opcode=="1100011":
         f=decode_b(bits)
+
         a=registers[f["rs1"]]
         b=registers[f["rs2"]]
+
 
         val1_s=to_sign32(val1)
         val2_s=to_sign32(val2)
@@ -203,6 +225,7 @@ def execute_step(pc,registers,mem,instruc,state):
     #  checking Branch condition
         if f["func3"]=="000":
             branch_take= val1_s == val2_s   #BEQ
+            
         elif f["func3"]=="001":
             branch_take= val1_s!=val2_s   #BNE
         elif f["func3"]=="100":
@@ -254,7 +277,6 @@ def execute_step(pc,registers,mem,instruc,state):
 
         if f["rd"]!=0:
             registers[f["rd"]] = next_pc
-
         pc= target
 
     else:
