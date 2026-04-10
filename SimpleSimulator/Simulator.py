@@ -149,7 +149,7 @@ def execute_step(pc,registers,mem,instruc,state):
         
         if f["rd"]!= 0:    # Write resuult to destination register(except x0)
             registers[f["rd"]] = to_unsign32(res)
-        pc+= 4
+        pc+=4
 
     #I Type
     elif opcode=="0010011":
@@ -165,14 +165,14 @@ def execute_step(pc,registers,mem,instruc,state):
             raise Exception("Unsupported I-type")
         if f["rd"] != 0:
             registers[f["rd"]]=to_unsign32(res)
-        pc += 4
+        pc+=4
 
     #Store
     elif opcode=="0100011":
         f=decode_s(bits)
         addr = check_mem_add(registers[f["rs1"]]+f["imme"])
         sw(mem,addr,registers[f["rs2"]])
-        pc += 4
+        pc+=4
  
     #LOAD type
     elif opcode =="0000011":
@@ -182,7 +182,7 @@ def execute_step(pc,registers,mem,instruc,state):
         val=lw(mem, addr)
         if f["rd"]!= 0:
             registers[f["rd"]]=val
-        pc+= 4
+        pc+=4
 
     #Branch type
     elif opcode=="1100011":
@@ -208,9 +208,7 @@ def execute_step(pc,registers,mem,instruc,state):
             branch_take= val1>=val2      #BGEU
         else:
             raise Exception("unsupported branch")
-
         # pc = pc + f["imme"] if branch_take else pc + 4
-
         if branch_take:
             pc = pc + f["imm"]
         else:
@@ -219,4 +217,42 @@ def execute_step(pc,registers,mem,instruc,state):
         halt = (
             f["func3"]=="000" and f["rs1"]==0 and f["rs2"]== 0 and f["imme"]== 0
         )
+#LUI
+    elif opcode=="0110111":
+        f = decode_u(bits)
+        if f["rd"]!=0:
+            registers[f["rd"]] =f["imme"] #load upper immeediate
+        pc += 4
 
+    #AUIPC
+    elif opcode =="0010111":
+        f = decode_u(bits)
+        if f["rd"]!=0:
+            registers[f["rd"]] = pc + f["imme"] #PC-relative add
+        pc += 4
+
+    #JAL
+    elif opcode =="1101111":
+        f = decode_j(bits)
+        next_pc = pc + 4
+        if f["rd"] !=0:
+            registers[f["rd"]] = next_pc
+        pc += f["imme"]
+
+    #JALR
+    elif opcode=="1100111":
+        f = decode_i(bits)
+        next_pc = pc+4
+        target = (registers[f["rs1"]] + f["imme"]) & 0xFFFFFFFE  #aligned target
+
+        if f["rd"]!=0:
+            registers[f["rd"]] = next_pc
+
+        pc= target
+
+    else:
+        raise Exception("Unsupported opcode")
+
+    registers[0]=0
+    app_state(state,pc,registers)
+    return pc,halt
