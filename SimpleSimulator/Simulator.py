@@ -33,8 +33,8 @@ def form_hex32(val):
     return "0x" + format(to_unsign32(val),"08X") #formats val as 32-bit hexadecimal string 
 
 #Decoders
-
-def decode_r(bits): #R-Type instructions
+#R-Type instructions
+def decode_r(bits):
     return {
         "func7": bits[0:7],
         "rs2": bin_to_integ(bits[7:12]),
