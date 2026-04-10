@@ -32,3 +32,21 @@ def form_bin32(val):
 def form_hex32(val):
     return "0x" + format(to_unsign32(val),"08X") #formats val as 32-bit hexadecimal string 
 
+#Decoders
+
+def decode_r(bits): #R-Type instructions
+    return {
+        "func7": bits[0:7],
+        "rs2": bin_to_integ(bits[7:12]),
+        "rs1": bin_to_integ(bits[12:17]),
+        "func3": bits[17:20],
+        "rd": bin_to_integ(bits[20:25]),
+    }
+
+def decode_i(bits):  #I- type instructions
+    return {
+        "imme": sign_ext(bin_to_integ(bits[0:12]), 12),
+        "rs1": bin_to_integ(bits[12:17]),
+        "func3": bits[17:20],
+        "rd": bin_to_integ(bits[20:25]),
+    }
